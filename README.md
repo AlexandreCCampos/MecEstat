@@ -1,2 +1,2 @@
 # MecEstat
-Repository for the work in stochastic systems in Statistical Mechanics
+Repository for the work of stochastic systems in Statistical Mechanics
