@@ -32,6 +32,7 @@ eta_t = rng.choice(
 
 a = 1.0
 epsilon = 0.25
+A = 0.12
 for i in range(n - 1):
     t[i + 1] = t[i] + dt
     x[i + 1] = x[i] + dt * (F(x[i], a) + epsilon * eta_t[i])
