@@ -7,6 +7,7 @@ rng = np.random.default_rng(seed=0)
 x_0 = 1.0
 dt = 0.01
 n = 10000
+epsilon = 0.25
 
 t = np.arange(stop=n) * dt
 x = np.zeros(
@@ -24,11 +25,13 @@ def F(x, a=0.0):
 #     return epsilon
 
 
-valores_eta = [- dt**(-0.5), dt**(-0.5)]
-eta_t = rng.choice(
-    a=valores_eta,
-    size=n
-)
+# valores_eta = [- dt**(-0.5), dt**(-0.5)]
+# eta_t = rng.choice(
+#     a=valores_eta,
+#     size=n
+# )
+eta_t = np.random.normal(0, 1./np.sqrt(epsilon), 1000)
+
 
 a = 1.0
 epsilon = 0.25
@@ -44,4 +47,4 @@ ax.set_ylim(-2, 2)
 
 ax.plot(t, x)
 
-fig.savefig('teste.png')
+fig.savefig('teste_sorteio_gaussiano.png')
