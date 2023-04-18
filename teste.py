@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-rng = np.random.default_rng(seed=0)
+rng = np.random.default_rng(seed=1)
 
 x_0 = 1.0
 dt = 0.01
@@ -16,8 +16,8 @@ x[0] = x_0
 
 
 
-def F(x, a=0.0):
-    return x * (a - x**2)
+def F(x, t, a=1.0, A=0.12, Omega=1e-3):
+    return x * (a - x**2) + A * np.cos(Omega * t)
 
 
 # def G(x, epsilon=1.0):
@@ -34,8 +34,9 @@ a = 1.0
 epsilon = 0.25
 A = 0.12
 for i in range(n - 1):
+    forca = F(x[i], t[i])
     t[i + 1] = t[i] + dt
-    x[i + 1] = x[i] + dt * (F(x[i], a) + epsilon * eta_t[i])
+    x[i + 1] = x[i] + dt * forca + epsilon * eta_t[i]
 
 
 fig, ax = plt.subplots()
