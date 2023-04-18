@@ -30,11 +30,10 @@ def F(x, t, a=1.0, A=0.12, Omega=1e-3):
 #     a=valores_eta,
 #     size=n
 # )
-eta_t = np.random.normal(0, 1./np.sqrt(epsilon), 1000)
+eta_t = np.random.normal(0, 1./np.sqrt(epsilon), n)
 
 
 a = 1.0
-epsilon = 0.25
 A = 0.12
 for i in range(n - 1):
     forca = F(x[i], t[i])
