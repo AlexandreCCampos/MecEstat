@@ -48,3 +48,5 @@ ax.set_ylim(-2, 2)
 ax.plot(t, x)
 
 fig.savefig('teste_sorteio_gaussiano.png')
+
+# blah
