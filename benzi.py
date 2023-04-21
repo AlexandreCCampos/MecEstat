@@ -12,7 +12,7 @@ T = 2 * np.pi / Omega
 epsilon = 0.25
 
 # t NÃO está em unidades de T (período)
-dt = 0.01
+dt = 0.01  # dt tem que ser pequeno para dx também seja pequeno e não divirja
 t_f = 10 * T
 n = int(t_f // dt)
 t = dt * np.arange(n)
@@ -31,14 +31,14 @@ print('Omega =   ', Omega)
 print('T =       ', T)
 print('epsilon = ', epsilon)
 print()
-print('x_0 =', x_0)
-print('n =  ', n)
-print('dt = ', dt)
+print('x_0 =     ', x_0)
+print('n =       ', n)
+print('dt =      ', dt)
 print()
 
-dW = np.sqrt(dt) * rng.normal(
+dW = rng.normal(
     loc=0.0,
-    scale=1.0,
+    scale=np.sqrt(dt),
     size=n,
 )  # Ver o arquivo wiener.py
 
