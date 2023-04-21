@@ -11,15 +11,11 @@ Omega = 1e-3
 T = 2 * np.pi / Omega
 epsilon = 0.25
 
-n = 1001
-
-# t está em unidades de T (período)
-t, dt = np.linspace(
-    start=0.0,
-    stop=10,
-    num=n,
-    retstep=True,
-)
+# t NÃO está em unidades de T (período)
+dt = 0.01
+t_f = 10 * T
+n = int(t_f // dt)
+t = dt * np.arange(n)
 
 x_0 = 1.0
 x = np.zeros(
@@ -33,18 +29,23 @@ x[0] = x_0
 # )
 # eta = rng.normal(0, 1./np.sqrt(dt), n)
 
-dW = rng.normal(
+dW = np.sqrt(dt) * rng.normal(
     loc=0.0,
-    scale=1.0 / np.sqrt(dt),
-    size=n
+    # scale=1.0 / np.sqrt(dt),
+    scale=1.0,
+    size=n,
 )
 
 # Prescrição de Itô
 # x(t + dt) = x(t) + dt * ( F(x(t)) + G(x(t)) * eta(t) )
 # dx = x(a-x²)dt + epsilon dW
 for i in range(n - 1):
-    F_i = x[i] * (a - x[i]**2) + A * np.cos(2 * np.pi * t[i])
+    F_i = x[i] * (a - x[i]**2) + A * np.cos(Omega * t[i])
     x[i + 1] = x[i] + dt * F_i + epsilon * dW[i]
+
+
+# F_i = x[0] * (a - x[0]**2) + A * np.cos(Omega * t[0])
+# x[1] = x[0] + dt * F_i + epsilon * dW[0]
 
 
 print()
@@ -64,13 +65,14 @@ print()
 fig, ax = plt.subplots()
 
 ax.set_xlabel('t / T')
-ax.set_xlim(0, 10)
+ax.set_xlim(0, t_f)
+# ax.set_xlim(0, 100 * dt)
 
 ax.set_ylabel('x(t)')
 ax.set_ylim(-2, 2)
 
 ax.plot(t, x)
-fig.savefig('teste.png')
+fig.savefig('benzi.pdf')
 
 
 #####################################################################

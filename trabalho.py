@@ -11,27 +11,32 @@ def dU_dT(T, U0, T1, T2):
 
 # Parâmetros
 U0 = 1.0
-T1 = 0.0
-T2 = 10.0
-g = 5.0
-periodo = 1e0
-omega = 2 * np.pi / periodo
-epsilon = 100.0
+T1 = 280.0
+T2 = 290.0
 
-n = 100001
+g = 100.0
+
+periodo = 1e5 / 1e5
+omega = 2 * np.pi / periodo
+epsilon = 0.0005
+
+n = 10001
 
 t, dt = np.linspace(
     start=0.0,
-    stop=1e1,
+    stop=300.0 * 1e3,
     num=n,
     retstep=True,
 )
+
+t /= 1e5
+dt /= 1e5
 
 T_0 = T2
 T = np.zeros(
     shape=n
 )
-T[0] = 2.0
+T[0] = T2
 
 # eta = rng.choice(
 #     a=np.array([- 1, 1]) / np.sqrt(dt),
@@ -39,7 +44,8 @@ T[0] = 2.0
 # )
 eta = rng.normal(
     loc=0.0,
-    scale=1.0 / np.sqrt(dt),
+    # scale=1.0 / np.sqrt(dt),
+    scale=1.0,
     size=n
 )
 
@@ -56,8 +62,8 @@ ax.set_xlabel('t')
 # ax.set_xlim(100, 500)
 ax.set_xlim(t.min(), t.max())
 
-ax.set_ylabel('T(t)')
-ax.set_ylim(-5, 15)
+ax.set_ylabel('T')
+ax.set_ylim(T1 - 10, T2 + 10)
 
 ax.plot(t, T)
 fig.savefig('t.pdf')
