@@ -60,5 +60,5 @@ ax.set_ylabel('T(t)')
 ax.set_ylim(-5, 15)
 
 ax.plot(t, T)
-fig.savefig('t.png')
+fig.savefig('t.pdf')
 # plt.show()
