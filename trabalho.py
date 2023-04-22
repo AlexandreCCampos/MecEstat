@@ -10,24 +10,25 @@ def dU_dT(T, U0, T1, T2):
 
 
 # Parâmetros
-U0 = 1.0
+U0 = 1e0
 T1 = 280.0
 T2 = 290.0
-g = 0.25
+g = 0.5
 periodo = 1e5
 omega = 2 * np.pi / periodo
-epsilon = 0.0005
+epsilon = 0.055
 
 dt = 0.01
 t_f = 300.0 * 1e3
 n = int(t_f // dt)
+# n //= 4
 t = dt * np.arange(n)
 
-T_0 = T2
+T_0 = np.copy(T2)
 T = np.zeros(
     shape=n
 )
-T[0] = T2
+T[0] = T_0
 
 # eta = rng.choice(
 #     a=np.array([- 1, 1]) / np.sqrt(dt),
@@ -56,12 +57,25 @@ for i in trange(n - 1, desc='Trabalho'):
 
 fig, ax = plt.subplots()
 
-ax.set_xlabel('t')
-ax.set_xlim(0, t_f)
+# fig.set_size_inches(10, 10)
 
-ax.set_ylabel('T')
+ax.grid(visible=True)
+
+ax.set_xlabel('Anos ($\\times 10^3$)')
+ax.set_xlim(0, t_f / 1e3)
+
+ax.set_ylabel('Temperatura (K)')
 ax.set_ylim(T1 - 10, T2 + 10)
 
-ax.plot(t, T)
-# fig.savefig('t.pdf')
-plt.show()
+ax.plot(
+    t / 1e3,
+    T,
+    linewidth=0.1,
+)
+
+fig.savefig(
+    fname='trabalho.pdf',
+    dpi=300,
+)
+
+# plt.show()

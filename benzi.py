@@ -17,7 +17,7 @@ t_f = 10 * T
 n = int(t_f // dt)
 t = dt * np.arange(n)
 
-x_0 = 1.0
+x_0 = np.copy(a)
 x = np.zeros(
     shape=n
 )
@@ -50,12 +50,18 @@ for i in trange(n - 1, desc='Reprodução Referência 1'):
 
 fig, ax = plt.subplots()
 
-ax.set_xlabel('t / T')
+ax.grid(visible=True)
+
+ax.set_xlabel('$t / T$')
 ax.set_xlim(0, t_f / T)
 # ax.set_xlim(0, 100 * dt)
 
-ax.set_ylabel('x(t)')
+ax.set_ylabel('$x(t)$')
 ax.set_ylim(-2, 2)
 
-ax.plot(t / T, x)
+ax.plot(
+    t / T,
+    x,
+    linewidth=0.1,
+)
 fig.savefig('benzi.pdf')
