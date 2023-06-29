@@ -61,6 +61,9 @@ for i in trange(n - 1, desc="Trabalho"):
     T[i + 1] = T[i] + dt * F_i + g * dW[i]
 
 
+
+############## Gráfico
+
 fig, ax = plt.subplots()
 
 # fig.set_size_inches(10, 10)
@@ -73,10 +76,16 @@ ax.set_xlim(0, t_f / 1e3)
 ax.set_ylabel("Temperatura (K)")
 ax.set_ylim(T1 - 10, T2 + 10)
 
+# ax.plot(
+#     t / 1e3,
+#     T,
+#     linewidth=0.1,
+# )
+
+passo = 100000
 ax.plot(
-    t / 1e3,
-    T,
-    linewidth=0.1,
+    (t / 1e3)[::passo],
+    T[::passo],
 )
 
 fig.savefig(
