@@ -1,6 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from tqdm.auto import trange
+import pickle
 
 rng = np.random.default_rng(seed=0)
 
@@ -19,39 +20,25 @@ def d2U_dT2(T, U0, T1, T2):
 
 
 # Parâmetros
-T1 = 280.0
-T2 = 290.0
-g = 1.0
-U0 = g**2 / (2 * 0.12)
 periodo = 1e5
 omega = 2 * np.pi / periodo
-epsilon = 0.001 * 340
+T1 = 280.0
+T2 = 290.0
+U0 = 213
+
 dt = 0.01
 t_f = 300.0 * 1e3
 n = int(t_f // dt)
 t = dt * np.arange(n)
 
-C = periodo / np.exp(2 * U0 / g**2)
+# array_epsilon = np.linspace(20-10, 20+10, num=5)
+# array_g = np.linspace(5.6-2, 5.6+2, num=5)
 
-print("T1         ", T1)
-print("T2         ", T2)
-print("g          ", g)
-print("U0         ", U0)
-print("Tau        ", periodo)
-print("Omega      ", omega)
-print("Epsilon    ", epsilon)
-print("dt         ", dt)
-print("C          ", C)
+array_epsilon = np.array([0.1, 1, 10, 100, 1000])
+array_g = np.array([0.1, 1, 10, 100, 1000])
 
-array_U0 = np.linspace(0, 5, 10)
-array_g = np.linspace(0, 5, 10)
-
-# array_U0, array_g = np.meshgrid(array_U0, array_g, indexing='ij')
-
-#################################################################
-T_0 = np.copy(T2)
 T = np.zeros(shape=n)
-T[0] = T_0
+T[0] = T1
 
 dW = rng.normal(
         loc=0.0,
@@ -59,47 +46,59 @@ dW = rng.normal(
         size=n,
     )  # Ver o arquivo wiener.py
 
-for i, j in np.ndindex(11, 11):
-    U0 = array_U0[i]
-    g = array_g[j]
+fig, axs = plt.subplots(
+    nrows=array_epsilon.size,
+    ncols=array_g.size
+)
+# fig.set_size_inches(10, 10)
 
+for j in range(array_epsilon.size):
+    axs[j, 0].set_ylabel("$\epsilon$ = " + str(array_epsilon[j]))
+
+for k in range(array_g.size):
+    axs[-1, k].set_xlabel("$g$ = " + str(round(array_g[k], 1)))
+
+for j, k in np.ndindex(array_epsilon.size, array_g.size):
+    # axs[j, k].grid(visible=True)
+
+    # axs[j, k].set_xlabel("Anos ($\\times 10^3$)")
+    axs[j, k].set_xlim(0, t_f / 1e3)
+
+    # axs[j, k].set_ylabel("Temperatura (K)")
+    axs[j, k].set_ylim(T1 - 10, T2 + 10)
+
+    axs[j, k].set_yticklabels([])
+    axs[j, k].set_xticklabels([])
+    axs[j, k].set_xticks([])
+    axs[j, k].set_yticks([])
+
+fig.savefig(
+    fname="verificacao.pdf",
+    dpi=300,
+)
+
+for j, k in np.ndindex(array_epsilon.size, array_g.size):
+    epsilon = array_epsilon[j]
+    g = array_g[k]
 
     # Prescrição de Itô
     # T(t + dt) = T(t) + dt * ( -U'(T) + g * eta(t) )
     # dT = dt * ( -U'(T)) + g * dW
-    for i in trange(n - 1, desc="Trabalho"):
+    for i in trange(n - 1, desc="Subplot " + str(j) + ' ' + str(k)):
         F_i = -dU_dT(T[i], U0, T1, T2) - epsilon * np.cos(omega * t[i])
         T[i + 1] = T[i] + dt * F_i + g * dW[i]
 
-    ############## Gráfico
-
-    fig, ax = plt.subplots()
-
-    # fig.set_size_inches(10, 10)
-
-    ax.grid(visible=True)
-
-    ax.set_xlabel("Anos ($\\times 10^3$)")
-    ax.set_xlim(0, t_f / 1e3)
-
-    ax.set_ylabel("Temperatura (K)")
-    ax.set_ylim(T1 - 10, T2 + 10)
-
-    # ax.plot(
-    #     t / 1e3,
-    #     T,
-    #     linewidth=0.1,
-    # )
-
     passo = 100000
-    ax.plot(
+    axs[j, k].plot(
         (t / 1e3)[::passo],
         T[::passo],
     )
 
     fig.savefig(
-        fname="verif_" + str(i) + "_" + str(j) + ".pdf",
+        fname="verificacao.pdf",
         dpi=300,
     )
 
     # plt.show()
+
+# pickle.dump((fig, axs), open('verificacao.pickle', 'wb'))
