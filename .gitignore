@@ -130,3 +130,5 @@ dmypy.json
 
 
 verificacao.pickle
+plot_gptchat.py
+.gitignore
