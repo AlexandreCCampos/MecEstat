@@ -45,48 +45,49 @@ dW = rng.normal(
     size=n,
 )  # Ver o arquivo wiener.py
 
-# Prescrição de Itô
-# T(t + dt) = T(t) + dt * ( -U'(T) + g * eta(t) )
-# dT = dt * ( -U'(T)) + g * dW
-for i in trange(n - 1, desc="Trabalho"):
-    F_i = -dU_dT(T[i], U0, T1, T2) - epsilon * np.cos(omega * t[i])
-    T[i + 1] = T[i] + dt * F_i + g * dW[i]
+if __name__== '__main__':
+    # Prescrição de Itô
+    # T(t + dt) = T(t) + dt * ( -U'(T) + g * eta(t) )
+    # dT = dt * ( -U'(T)) + g * dW
+    for i in trange(n - 1, desc="Trabalho"):
+        F_i = -dU_dT(T[i], U0, T1, T2) - epsilon * np.cos(omega * t[i])
+        T[i + 1] = T[i] + dt * F_i + g * dW[i]
 
 
-############## Gráfico
+    ############## Gráfico
 
-fig, ax = plt.subplots()
+    fig, ax = plt.subplots()
 
-# fig.set_size_inches(10, 10)
+    # fig.set_size_inches(10, 10)
 
-ax.grid(visible=True)
+    ax.grid(visible=True)
 
-ax.set_xlabel("Anos ($\\times 10^3$)")
-ax.set_xlim(0, t_f / 1e3)
+    ax.set_xlabel("Anos ($\\times 10^3$)")
+    ax.set_xlim(0, t_f / 1e3)
 
-ax.set_ylabel("Temperatura (K)")
-ax.set_ylim(T1 - 10, T2 + 10)
+    ax.set_ylabel("Temperatura (K)")
+    ax.set_ylim(T1 - 10, T2 + 10)
 
-# ax.plot(
-#     t / 1e3,
-#     T,
-#     linewidth=0.1,
-# )
+    # ax.plot(
+    #     t / 1e3,
+    #     T,
+    #     linewidth=0.1,
+    # )
 
-passo = 100000
-ax.plot(
-    (t / 1e3)[::passo],
-    T[::passo],
-)
+    passo = 100000
+    ax.plot(
+        (t / 1e3)[::passo],
+        T[::passo],
+    )
 
-# ax.plot(
-#     (t / 1e3),
-#     T,
-# )
+    # ax.plot(
+    #     (t / 1e3),
+    #     T,
+    # )
 
-fig.savefig(
-    fname="trabalho.pdf",
-    dpi=300,
-)
+    fig.savefig(
+        fname="trabalho.pdf",
+        dpi=300,
+    )
 
-# plt.show()
+    # plt.show()
