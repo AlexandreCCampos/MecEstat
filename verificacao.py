@@ -2,10 +2,25 @@ import numpy as np
 import matplotlib.pyplot as plt
 from tqdm.auto import trange
 import pickle
+import multiprocessing
 
-from trabalho import rng, dU_dT, d2U_dT2, periodo, omega, T1, T2, U0, g, epsilon, dt, t_f, n, t
-
-
+from trabalho import (
+    rng,
+    dU_dT,
+    d2U_dT2,
+    periodo,
+    omega,
+    T1,
+    T2,
+    U0,
+    g,
+    epsilon,
+    dt,
+    t_f,
+    n,
+    t,
+    dW,
+)
 
 
 # array_epsilon = np.linspace(20-10, 20+10, num=5)
@@ -19,12 +34,6 @@ array_g = np.array([0.1, 10, 20, 30, 40])
 
 T = np.zeros(shape=n)
 T[0] = T1
-
-dW = rng.normal(
-    loc=0.0,
-    scale=np.sqrt(dt),
-    size=n,
-)  # Ver o arquivo wiener.py
 
 fig, axs = plt.subplots(nrows=array_U0.size, ncols=array_g.size)
 # fig.set_size_inches(10, 10)
@@ -54,7 +63,8 @@ fig.savefig(
     dpi=300,
 )
 
-for j, k in np.ndindex(array_U0.size, array_g.size):
+
+def f(j, k):
     U0 = array_U0[j]
     g = array_g[k]
 
@@ -78,4 +88,29 @@ for j, k in np.ndindex(array_U0.size, array_g.size):
 
     # plt.show()
 
-pickle.dump((fig, axs), open("verificacao.pickle", "wb"))
+
+# for j, k in np.ndindex(array_U0.size, array_g.size):
+#     U0 = array_U0[j]
+#     g = array_g[k]
+
+#     # Prescrição de Itô
+#     # T(t + dt) = T(t) + dt * ( -U'(T) + g * eta(t) )
+#     # dT = dt * ( -U'(T)) + g * dW
+#     for i in trange(n - 1, desc="Subplot " + str(j) + " " + str(k)):
+#         F_i = -dU_dT(T[i], U0, T1, T2) - epsilon * np.cos(omega * t[i])
+#         T[i + 1] = T[i] + dt * F_i + g * dW[i]
+
+#     passo = 100000
+#     axs[j, k].plot(
+#         (t / 1e3)[::passo],
+#         T[::passo],
+#     )
+
+#     fig.savefig(
+#         fname="verificacao.pdf",
+#         dpi=300,
+#     )
+
+#     # plt.show()
+
+# pickle.dump((fig, axs), open("verificacao.pickle", "wb"))
