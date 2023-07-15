@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from tqdm.auto import trange
 import pickle
-from multiprocessing import Pool
+from multiprocessing import Pool, cpu_count
 
 from trabalho import (
     rng,
@@ -76,17 +76,19 @@ def f(args):
     for i in trange(n - 1, desc="Subplot " + str(j) + " " + str(k)):
         F_i = -dU_dT(T[i], U0, T1, T2) - epsilon * np.cos(omega * t[i])
         T[i + 1] = T[i] + dt * F_i + g * dW[i]
-    
+
     return T
 
-if __name__ == '__main__':
-    with Pool(4) as p:
-        u = p.map(
-             func=f,
-             iterable=np.ndindex(array_U0.size, array_g.size)
-         )
-        lista_u = list(u)
 
+if __name__ == '__main__':
+    num_processes = cpu_count()
+
+    with Pool(processes=num_processes) as p:
+        u = p.map(
+            func=f,
+            iterable=np.ndindex(array_U0.size, array_g.size)
+        )
+        lista_u = list(u)
 
     for m in range(array_U0.size * array_g.size):
         j, k = list(np.ndindex(array_U0.size, array_g.size))[m]

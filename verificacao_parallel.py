@@ -112,12 +112,16 @@ num_processes = multiprocessing.cpu_count()
 pool = multiprocessing.Pool(processes=num_processes)
 
 # Create a partial function with shared_list as a fixed argument
-process_item_partial = partial(f, axs2=axs)
+# process_item_partial = partial(f, axs2=axs)
 
 # pool.map(process_item_partial, np.ndindex(array_U0.size, array_g.size),axs)
 # graphlist = list(pool.map(f, np.ndindex(array_U0.size, array_g.size)))
 
-pool.map(process_item_partial, np.ndindex(array_U0.size, array_g.size))
+list_axs = []
+for i in np.ndindex(array_U0.size, array_g.size):
+    list_axs.append(axs[i[0], i[1]])
+
+pool.map(f, np.ndindex(array_U0.size, array_g.size), list(list_axs))
 
 
 # for i in graphlist:
