@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 from tqdm.auto import trange
 import pickle
 from multiprocessing import Pool, cpu_count
+import time
 
 from trabalho import (
     rng,
@@ -22,12 +23,11 @@ from trabalho import (
     dW,
 )
 
-
 # array_epsilon = np.linspace(20-10, 20+10, num=5)
 # array_g = np.linspace(5.6-2, 5.6+2, num=5)
 
-array_U0 = np.array([0.1, 1, 10])
-array_g = np.array([0.1, 10, 20])
+array_U0 = np.array([10, 100, 213, 250, 300])
+array_g = np.array([1, 2.5, 5.6, 7.5, 10])
 
 # array_U0 = np.array([1, U0])
 # array_g = np.array([1, g])
@@ -81,6 +81,9 @@ def f(args):
 
 
 if __name__ == '__main__':
+    # Start the timer
+    start_time = time.time()
+
     num_processes = cpu_count()
 
     with Pool(processes=num_processes) as p:
@@ -105,31 +108,11 @@ if __name__ == '__main__':
         dpi=300,
     )
 
-    # plt.show()
+    # Stop the timer
+    end_time = time.time()
 
+    # Calculate the elapsed time
+    execution_time = end_time - start_time
 
-# for j, k in np.ndindex(array_U0.size, array_g.size):
-#     U0 = array_U0[j]
-#     g = array_g[k]
-
-#     # Prescrição de Itô
-#     # T(t + dt) = T(t) + dt * ( -U'(T) + g * eta(t) )
-#     # dT = dt * ( -U'(T)) + g * dW
-#     for i in trange(n - 1, desc="Subplot " + str(j) + " " + str(k)):
-#         F_i = -dU_dT(T[i], U0, T1, T2) - epsilon * np.cos(omega * t[i])
-#         T[i + 1] = T[i] + dt * F_i + g * dW[i]
-
-#     passo = 100000
-#     axs[j, k].plot(
-#         (t / 1e3)[::passo],
-#         T[::passo],
-#     )
-
-#     fig.savefig(
-#         fname="verificacao.pdf",
-#         dpi=300,
-#     )
-
-#     # plt.show()
-
-# pickle.dump((fig, axs), open("verificacao.pickle", "wb"))
+    # Print the execution time
+    print(f"Execution time: {execution_time} seconds")
