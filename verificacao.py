@@ -27,7 +27,7 @@ from trabalho import (
 # array_g = np.linspace(5.6-2, 5.6+2, num=5)
 
 array_U0 = np.array([10, 100, 213, 250, 300])
-array_g = np.array([1, 2.5, 5.6, 7.5, 10])
+array_g = np.array([2.5, 4, 5.6, 7.5, 10])
 
 # array_U0 = np.array([1, U0])
 # array_g = np.array([1, g])
@@ -55,10 +55,10 @@ for j, k in np.ndindex(array_U0.size, array_g.size):
     axs[j, k].set_xticks([])
     axs[j, k].set_yticks([])
 
-fig.savefig(
-    fname="verificacao.pdf",
-    dpi=300,
-)
+# fig.savefig(
+#     fname="verificacao.pdf",
+#     dpi=300,
+# )
 
 
 def f(args):
