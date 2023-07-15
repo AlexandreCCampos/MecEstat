@@ -36,6 +36,7 @@ array_g = np.array([0.1, 10, 20])
 # array_U0 = np.array([1, U0])
 # array_g = np.array([1, g])
 
+
 fig, axs = plt.subplots(nrows=array_U0.size, ncols=array_g.size)
 # fig.set_size_inches(10, 10)
 
@@ -65,14 +66,13 @@ fig.savefig(
 )
 
 
-def f(args):
+def f(args, axs2):
     j = args[0]
     k = args[1]
     U0 = array_U0[j]
     g = array_g[k]
     T = np.zeros(shape=n)
     T[0] = T1
-
     # Prescrição de Itô
     # T(t + dt) = T(t) + dt * ( -U'(T) + g * eta(t) )
     # dT = dt * ( -U'(T)) + g * dW
@@ -80,12 +80,13 @@ def f(args):
     x = np.linspace(0, 10, 100)
     y = np.sin(x)*10
 
-    fig2, ax2 = plt.subplots()
+    # fig2 = plt.figure()
+    # ax2 = fig2.add_subplot(111)
+    # ax2.plot(x, y)
 
-    ax2.plot(x, y)
+    # fig2.savefig("test_exclude_later.png")
+    axs2[j, k].plot(x, y)
 
-    fig2.savefig("test_exclude_later.png")
-    # axs[j, k].plot(x,y)
     # for i in trange(n - 1, desc="Subplot " + str(j) + " " + str(k)):
     #     F_i = -dU_dT(T[i], U0, T1, T2) - epsilon * np.cos(omega * t[i])
     #     T[i + 1] = T[i] + dt * F_i + g * dW[i]
@@ -95,7 +96,7 @@ def f(args):
     #     (t / 1e3)[::passo],
     #     T[::passo],
     # )
-    return (j, k, fig2)
+    # return (j, k, fig2)
 
 # # Create a manager to handle shared objects
 # manager = multiprocessing.Manager()
@@ -111,20 +112,24 @@ num_processes = multiprocessing.cpu_count()
 pool = multiprocessing.Pool(processes=num_processes)
 
 # Create a partial function with shared_list as a fixed argument
-# process_item_partial = partial(f, shared_list=shared_list)
+process_item_partial = partial(f, axs2=axs)
 
-# pool.map(process_item_partial,np.ndindex(array_U0.size, array_g.size))
-graphlist = list(pool.map(f, np.ndindex(array_U0.size, array_g.size)))
+# pool.map(process_item_partial, np.ndindex(array_U0.size, array_g.size),axs)
+# graphlist = list(pool.map(f, np.ndindex(array_U0.size, array_g.size)))
+
+pool.map(process_item_partial, np.ndindex(array_U0.size, array_g.size))
 
 
 # for i in graphlist:
 
-#     print(i)
-#     fig2,ax2=plt.subplots()
-#     ax2=i[2]
+#     print(i[0])
+#     print(i[1])
+#     print(i[2])
+#     fig2, ax2 = plt.subplots()
+#     ax2.add_subplot(i[2])
 
-#     # fig2.savefig("test_exclude_later.png")
-#     axs[i[0],i[1]]=i[2]
+#     fig2.savefig("test_exclude_later.png")
+#     axs[i[0], i[1]].add_subplot(i[2])
 
 fig.savefig(
     fname="verificacao.pdf",
